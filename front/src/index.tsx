@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import * as serviceWorker from "./serviceWorker";
 import { App } from "App";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Login } from "features/login/Login";
+import { Auth } from "features/auth/Auth";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -14,7 +14,7 @@ ReactDOM.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Auth />} />
         </Routes>
       </BrowserRouter>
     </Provider>
