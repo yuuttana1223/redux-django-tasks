@@ -3,7 +3,7 @@ import { RootState } from "app/store";
 import axios from "axios";
 
 const API_URL = "http://localhost:8000";
-const token = localStorage.localJWT; // localJWTは任意の名前
+const token: string | null = localStorage.localJWT; // localJWTは任意の名前
 
 type Credential = {
   username: string;
@@ -18,6 +18,7 @@ export type User = {
 type AuthState = {
   isLoginView: boolean;
   currentUser: User;
+  credential: Credential;
 };
 
 const initialState: AuthState = {
@@ -25,6 +26,10 @@ const initialState: AuthState = {
   currentUser: {
     id: 0,
     username: "",
+  },
+  credential: {
+    username: "",
+    password: "",
   },
 };
 
@@ -55,7 +60,7 @@ export const fetchAsyncRegister = createAsyncThunk(
 
 export const fetchAsyncCurrentUser = createAsyncThunk(
   "auth/currentUser",
-  async (auth: Credential) => {
+  async () => {
     const res = await axios.get<User>(`${API_URL}/api/myself`, {
       headers: {
         Authorization: `JWT ${token}`,
@@ -77,6 +82,12 @@ const authSlice = createSlice({
     setIsLoginView: (state, action: PayloadAction<boolean>) => {
       state.isLoginView = action.payload;
     },
+    setUsername: (state, action: PayloadAction<string>) => {
+      state.credential.username = action.payload;
+    },
+    setPassword: (state, action: PayloadAction<string>) => {
+      state.credential.password = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(
@@ -95,8 +106,9 @@ const authSlice = createSlice({
   },
 });
 
-export const { setIsLoginView } = authSlice.actions;
+export const { setIsLoginView, setUsername, setPassword } = authSlice.actions;
 export const selectIsLoginView = (state: RootState) => state.login.isLoginView;
 export const selectCurrentUser = (state: RootState) => state.login.currentUser;
+export const selectCredential = (state: RootState) => state.login.credential;
 
 export default authSlice.reducer;

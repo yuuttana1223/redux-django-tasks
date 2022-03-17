@@ -1,31 +1,28 @@
-import { useState, VFC } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { VFC } from "react";
 import {
   fetchAsyncLogin,
   selectIsLoginView,
   setIsLoginView,
+  setPassword,
+  setUsername,
 } from "features/auth/authSlice";
 import classes from "features/auth/Auth.module.scss";
 import { Button } from "@mui/material";
 import { useCallback } from "react";
-import { fetchAsyncRegister } from "./authSlice";
+import { fetchAsyncRegister, selectCredential } from "./authSlice";
+import { useAppDispatch, useAppSelector } from "app/hooks";
 
 export const Auth: VFC = () => {
-  const [credential, setCredential] = useState({
-    username: "",
-    password: "",
-  });
-  console.log("🚀 ~ file: Auth.tsx ~ line 15 ~ credential", credential);
-  const isLoginView = useSelector(selectIsLoginView);
-  const dispatch = useDispatch();
+  const isLoginView = useAppSelector(selectIsLoginView);
+  const credential = useAppSelector(selectCredential);
+  const dispatch = useAppDispatch();
 
   const login = useCallback(async () => {
     if (isLoginView) {
       await dispatch(fetchAsyncLogin(credential));
     } else {
       const res = await dispatch(fetchAsyncRegister(credential));
-      // 型が分からなかったのでanyにしている
-      if (fetchAsyncRegister.fulfilled.match(res as any)) {
+      if (fetchAsyncRegister.fulfilled.match(res)) {
         await dispatch(fetchAsyncLogin(credential));
       }
     }
@@ -41,12 +38,7 @@ export const Auth: VFC = () => {
           name="username"
           placeholder=""
           value={credential.username}
-          onChange={(e) =>
-            setCredential((prevCredential) => ({
-              ...prevCredential,
-              username: e.target.value,
-            }))
-          }
+          onChange={(e) => dispatch(setUsername(e.target.value))}
           required
           className={classes.inputLog}
         />
@@ -56,12 +48,7 @@ export const Auth: VFC = () => {
           name="password"
           placeholder=""
           value={credential.password}
-          onChange={(e) =>
-            setCredential((prevCredential) => ({
-              ...prevCredential,
-              password: e.target.value,
-            }))
-          }
+          onChange={(e) => dispatch(setPassword(e.target.value))}
           required
           className={classes.inputLog}
         />
