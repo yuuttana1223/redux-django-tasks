@@ -92,7 +92,7 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(
       fetchAsyncLogin.fulfilled,
-      (state, action: PayloadAction<JWT>) => {
+      (_state, action: PayloadAction<JWT>) => {
         localStorage.setItem("localJWT", action.payload.access);
         action.payload.access && (window.location.href = "/");
       }
@@ -100,6 +100,7 @@ const authSlice = createSlice({
     builder.addCase(
       fetchAsyncCurrentUser.fulfilled,
       (state, action: PayloadAction<User>) => {
+        console.log("🚀 ~ file: authSlice.ts ~ line 103 ~ action", action);
         state.currentUser = action.payload;
       }
     );

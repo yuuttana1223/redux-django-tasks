@@ -2,15 +2,17 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "app/store";
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api/tasks";
+const API_URL = "http://localhost:8000/api/tasks";
 const token: string | null = localStorage.localJWT;
 
-type Task = {
+export type Task = {
   id: number;
   title: string;
   created_at: string;
   updated_at: string;
 };
+
+type EditedTask = Pick<Task, "id" | "title">;
 
 export const fetchAsyncAllTasks = createAsyncThunk("tasks/get", async () => {
   const res = await axios.get<Task[]>(`${API_URL}`, {
@@ -23,8 +25,8 @@ export const fetchAsyncAllTasks = createAsyncThunk("tasks/get", async () => {
 
 export const postAsyncTask = createAsyncThunk(
   "task/post",
-  async (task: Task) => {
-    const res = await axios.post<Task>(`${API_URL}`, task, {
+  async (task: EditedTask) => {
+    const res = await axios.post<Task>(`${API_URL}/`, task, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `JWT ${token}`,
@@ -36,8 +38,8 @@ export const postAsyncTask = createAsyncThunk(
 
 export const patchAsyncTask = createAsyncThunk(
   "task/patch",
-  async (task: Task) => {
-    const res = await axios.patch<Task>(`${API_URL}/${task.id}`, task, {
+  async (task: EditedTask) => {
+    const res = await axios.patch<Task>(`${API_URL}/${task.id}/`, task, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `JWT ${token}`,
@@ -50,7 +52,7 @@ export const patchAsyncTask = createAsyncThunk(
 export const deleteAsyncTask = createAsyncThunk(
   "task/delete",
   async (task: Task) => {
-    await axios.delete(`${API_URL}/${task.id}`, {
+    await axios.delete(`${API_URL}/${task.id}/`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `JWT ${token}`,
@@ -74,8 +76,6 @@ const taskSlice = createSlice({
     editedTask: {
       id: 0,
       title: "",
-      created_at: "",
-      updated_at: "",
     },
     selectedTask: {
       id: 0,
@@ -85,7 +85,7 @@ const taskSlice = createSlice({
     },
   },
   reducers: {
-    editTask(state, action: PayloadAction<Task>) {
+    editTask(state, action: PayloadAction<EditedTask>) {
       state.editedTask = action.payload;
     },
     selectTask(state, action: PayloadAction<Task>) {

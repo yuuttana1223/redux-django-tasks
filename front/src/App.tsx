@@ -1,53 +1,31 @@
-import { Counter } from "features/counter/Counter";
-import "App.css";
+import classes from "App.module.scss";
+import { Header } from "features/auth/Header";
+import { TaskDetails } from "features/task/TaskDetails";
+import { TaskInput } from "features/task/TaskInput";
+import { TaskList } from "features/task/TaskList";
+import { VFC, useCallback } from "react";
 
-export const App = () => {
+import { FaSignInAlt } from "react-icons/fa";
+
+export const App: VFC = () => {
+  const logout = useCallback(() => {
+    localStorage.removeItem("localJWT");
+    window.location.href = "/login";
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
+    <div className={classes.containerTasks}>
+      <div className={classes.appTasks}>
+        <button onClick={logout} className={classes.signBtn}>
+          <FaSignInAlt />
+        </button>
+        <Header />
+        <TaskInput />
+        <TaskList />
+      </div>
+      <div className={classes.appDetails}>
+        <TaskDetails />
+      </div>
     </div>
   );
 };
