@@ -112,4 +112,4 @@ export const selectIsLoginView = (state: RootState) => state.login.isLoginView;
 export const selectCurrentUser = (state: RootState) => state.login.currentUser;
 export const selectCredential = (state: RootState) => state.login.credential;
 
-export default authSlice.reducer;
+export const authReducer = authSlice.reducer;

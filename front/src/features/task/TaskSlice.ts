@@ -122,4 +122,4 @@ export const selectSelectedTask = (state: RootState) => state.task.selectedTask;
 export const selectEditedTask = (state: RootState) => state.task.editedTask;
 export const selectTasks = (state: RootState) => state.task.tasks;
 
-export default taskSlice.reducer;
+export const taskReducer = taskSlice.reducer;
